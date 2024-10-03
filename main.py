@@ -86,7 +86,7 @@ async def xp(ctx):
 
 async def process_referral(message):
     content = message.content
-    await message.channel.send("someones been referralllled")
+    await message.channel.send("someones been referraled")
     if "has been invited by" in content:
         parts = content.split(" ")
         invited_user = parts[0]
@@ -125,7 +125,7 @@ async def add_exp(member, amount, guild, channel):
             role = discord.utils.get(guild.roles, name=role_name)
             if role and role not in member.roles:
                 await member.add_roles(role)
-                print(f"Assigned {role_name} to {member.name}")
+                print(f"🎉 Congratulations {member.name}! You've leveled up and unlocked the {role_name} role! 🚀")
                 await channel.send(f"Assigned {role_name} to {member.name}")
 
 
