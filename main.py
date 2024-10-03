@@ -102,6 +102,7 @@ async def process_referral(message):
 
 
 async def add_exp(member, amount, guild, channel):
+    global user_data
     if member.name == None:
         print("Could not find member")
         return
