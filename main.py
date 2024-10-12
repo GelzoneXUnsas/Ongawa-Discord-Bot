@@ -132,6 +132,12 @@ async def add_exp(member, amount, guild, channel):
 
     current_exp = user_data[str(member.id)]['exp']
 
+    if amount == REFERRAL_EXP:
+        user_data[str(member.id)]['referrals'] += 1
+
+
+
+
     # Save updated user data to file
     save_user_data()
 
