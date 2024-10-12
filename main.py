@@ -30,7 +30,7 @@ else:
 
 # Define exp thresholds and roles
 exp_roles = {
-    100: "Pluse",
+    100: "Pulse",
     200: "Riff",
     400: "Rhythm",
     800: "Harmony",
@@ -59,12 +59,20 @@ async def on_message(message):
     if message.author == bot.user:
         return
 
-    # Add exp for regular messages
-    await add_exp(message.author, MESSAGE_EXP, message.guild, message.channel)
-
     # Check for referral messages from Invite Tracker
     if message.author.name == "Invite Tracker":
         await process_referral(message)
+
+    #Exclude bots from gaining XP
+    if message.author.bot:
+        return
+    
+    # Exclude users with the "admin" role from gaining XP
+    if any(role.name == "admin" for role in message.author.roles):
+        return
+
+    # Add exp for regular messages
+    await add_exp(message.author, MESSAGE_EXP, message.guild, message.channel)
 
     # Respond to the message
     #await message.channel.send(f"that's cool {message.author.name}")
@@ -83,10 +91,21 @@ async def xp(ctx):
     else:
         await ctx.send(f"{ctx.author.name}, you don't have any XP yet.")
 
+@bot.command()
+async def referrals(ctx):
+    """Show the user's current number of referrals."""
+    user_id = ctx.author.id
+    if str(user_id) in user_data:
+        current_exp = user_data[str(user_id)]['referrals']
+        await ctx.send(
+            f"{ctx.author.name}, you currently have referred {current_exp} people!")
+    else:
+        await ctx.send(f"{ctx.author.name}, you don't have any referrals yet. Send a discord invite link to a friend!")
+
 
 async def process_referral(message):
     content = message.content
-    await message.channel.send("someones been referraled")
+    #await message.channel.send("someones been referraled")
     if "has been invited by" in content:
         parts = content.split(" ")
         invited_user = parts[0]
@@ -125,8 +144,8 @@ async def add_exp(member, amount, guild, channel):
             role = discord.utils.get(guild.roles, name=role_name)
             if role and role not in member.roles:
                 await member.add_roles(role)
-                print(f"🎉 Congratulations {member.name}! You've leveled up and unlocked the {role_name} role! 🚀")
-                await channel.send(f"Assigned {role_name} to {member.name}")
+                await channel.send(f"🎉 Congratulations {member.name}! You've leveled up and unlocked the {role_name} role! 🚀")
+                #await channel.send(f"Assigned {role_name} to {member.name}")
 
 
 @bot.command()
