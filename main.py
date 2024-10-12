@@ -63,6 +63,11 @@ async def on_message(message):
     if message.author.name == "Invite Tracker":
         await process_referral(message)
 
+    # Respond to the message
+    #await message.channel.send(f"that's cool {message.author.name}")
+
+    await bot.process_commands(message)
+
     #Exclude bots from gaining XP
     if message.author.bot:
         return
@@ -70,14 +75,9 @@ async def on_message(message):
     # Exclude users with the "admin" role from gaining XP
     if any(role.name == "admin" for role in message.author.roles):
         return
-
+    
     # Add exp for regular messages
     await add_exp(message.author, MESSAGE_EXP, message.guild, message.channel)
-
-    # Respond to the message
-    #await message.channel.send(f"that's cool {message.author.name}")
-
-    await bot.process_commands(message)
 
 
 @bot.command()
